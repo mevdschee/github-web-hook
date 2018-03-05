@@ -11,6 +11,7 @@ function isValid()
     $signature = @$_SERVER['HTTP_X_HUB_SIGNATURE'];
     $event = @$_SERVER['HTTP_X_GITHUB_EVENT'];
     $delivery = @$_SERVER['HTTP_X_GITHUB_DELIVERY'];
+    $secret  = getenv('GITHUB_WEB_HOOK_SECRET');
 
     if (!isset($signature, $event, $delivery)) {
         return false;
@@ -25,7 +26,7 @@ function isValid()
         return false;
     }
 
-    $hash = hash_hmac($algo, $payload, getenv('GITHUB_WEB_HOOK_SECRET'));
+    $hash = hash_hmac($algo, $payload, $secret);
     
     if ($hash != $sighash) {
         return false;
