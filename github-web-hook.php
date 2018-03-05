@@ -18,16 +18,6 @@ function isValid()
 
     $payload = file_get_contents('php://input');
 
-    if (!isSigned($signature, $payload)) {
-        return false;
-    }
-
-    //$data = json_decode($payload,true);
-    return true;
-}
-
-function isSigned($signature, $payload)
-{
     list ($algo, $sighash) = explode("=", $signature);
 
     if ($algo !== 'sha1') {
@@ -36,5 +26,16 @@ function isSigned($signature, $payload)
     }
 
     $hash = hash_hmac($algo, $payload, getenv('GITHUB_WEB_HOOK_SECRET'));
-    return ($hash === $sighash);
+    
+    if ($hash != $sighash) {
+        return false;
+    }
+
+    $data = json_decode($payload,true);
+
+    if ($data === null) {
+        return false;
+    }
+
+    return true;
 }
