@@ -18,8 +18,8 @@ function deploy($type)
         if ($hugoError) {
             return false;
         }
-        system('/usr/bin/time -f "\nTransfer in %e s" rsync -zrcvh --delete-delay ../app/public/ . 2>&1 1>../log/last_rsync.log', $moveError);
-        if ($moveError) {
+        system('/usr/bin/time -f "\nTransfer in %e s" rsync -zrcvh --delete-delay ../app/public/ . 2>&1 1>../log/last_rsync.log', $rsyncError);
+        if ($rsyncError) {
             return false;
         }
     }
