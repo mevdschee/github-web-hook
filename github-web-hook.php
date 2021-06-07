@@ -5,7 +5,7 @@ deploy('hugo');
 function deploy($type)
 {
     if (!isValid()) {
-        return false;
+       return false;
     }
     $dir = __DIR__;
     system("git -C ../app pull -f 2>../log/last_git_pull_stderr.log >../log/last_git_pull_stdout.log", $pullError);
@@ -13,7 +13,7 @@ function deploy($type)
         return false;
     }
     if ($type == 'hugo') {
-        system("hugo -s ../app -d . 2>../log/last_hugo_stderr.log >../log/last_hugo_stdout.log", $hugoError);
+        system("hugo -s ../app -d ../public_html 2>../log/last_hugo_stderr.log >../log/last_hugo_stdout.log", $hugoError);
         if ($hugoError) {
             return false;
         }
