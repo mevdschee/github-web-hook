@@ -3,7 +3,7 @@
 if (isValid()) {
     $dir = __DIR__;
     $output = shell_exec("git -C {$dir} pull -f 2>&1");
-    file_put_contents('../log/last_deploy.log', $output);
+    file_put_contents('../log/last_git_pull.log', $output);
 }
 
 function isValid()
