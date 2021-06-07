@@ -9,13 +9,17 @@ function deploy($type)
     if (!isValid()) {
        return false;
     }
-    system("git -C ../app pull -f 2>../log/last_git_pull_stderr.log >../log/last_git_pull_stdout.log", $pullError);
-    if ($pullError) {
+    system('git -C ../app pull -f 2>&1 1>../log/last_git.log', $gitError);
+    if ($gitError) {
         return false;
     }
     if ($type == 'hugo') {
-        system("hugo -s ../app -d ../public_html 2>../log/last_hugo_stderr.log >../log/last_hugo_stdout.log", $hugoError);
+        system('rm -Rf ../app/public && hugo -s ../app 2>&1 1>../log/last_hugo.log', $hugoError);
         if ($hugoError) {
+            return false;
+        }
+        system('/usr/bin/time -f "\nTransfer in %e s" rsync -zrcvh --delete-delay ../app/public/ . 2>&1 1>../log/last_rsync.log', $moveError);
+        if ($moveError) {
             return false;
         }
     }
@@ -56,3 +60,4 @@ function isValid()
 
     return true;
 }
+
