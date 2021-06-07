@@ -14,12 +14,8 @@ function deploy($type)
         return false;
     }
     if ($type == 'hugo') {
-        system('rm -Rf ../app/public && hugo -s ../app 2>&1 1>../log/last_hugo.log', $hugoError);
+        system('hugo --cleanDestinationDir -s ../app -d ../public_html 2>&1 1>../log/last_hugo.log', $hugoError);
         if ($hugoError) {
-            return false;
-        }
-        system('/usr/bin/time -f "\nTransfer in %e s" rsync -zrcvh --delete-delay ../app/public/ . 2>&1 1>../log/last_rsync.log', $rsyncError);
-        if ($rsyncError) {
             return false;
         }
     }
