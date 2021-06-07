@@ -1,9 +1,24 @@
 <?php
 
-if (isValid()) {
+deploy('hugo');
+
+function deploy($type)
+{
+    if (!isValid()) {
+        return false;
+    }
     $dir = __DIR__;
-    $output = shell_exec("git -C {$dir} pull -f 2>&1");
-    file_put_contents('../log/last_git_pull.log', $output);
+    system("git -C ../app pull -f 2>../log/last_git_pull_stderr.log >../log/last_git_pull_stdout.log", $pullError);
+    if ($pullError) {
+        return false;
+    }
+    if ($type == 'hugo') {
+        system("hugo -s ../app -d . 2>../log/last_hugo_stderr.log >../log/last_hugo_stdout.log", $hugoError);
+        if ($hugoError) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function isValid()
