@@ -1,10 +1,10 @@
 <?php
 
-if (!deploy('hugo')) {
+if (!deploy()) {
     http_response_code(500);
 }
 
-function deploy($type)
+function deploy()
 {
     if (!isValid()) {
        return false;
@@ -12,12 +12,6 @@ function deploy($type)
     system('git -C ../app pull -f 2>&1 1>../log/last_git.log', $gitError);
     if ($gitError) {
         return false;
-    }
-    if ($type == 'hugo') {
-        system('hugo --cleanDestinationDir -s ../app -d ../public_html 2>&1 1>../log/last_hugo.log', $hugoError);
-        if ($hugoError) {
-            return false;
-        }
     }
     return true;
 }
